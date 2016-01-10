@@ -13,6 +13,10 @@
 		A10EFEAF1C42456B0047766C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A10EFEAD1C42456B0047766C /* Main.storyboard */; };
 		A10EFEB11C42456B0047766C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A10EFEB01C42456B0047766C /* Assets.xcassets */; };
 		A10EFEB41C42456B0047766C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A10EFEB21C42456B0047766C /* LaunchScreen.storyboard */; };
+		A10EFEBD1C4245C30047766C /* BNRLine.m in Sources */ = {isa = PBXBuildFile; fileRef = A10EFEBC1C4245C30047766C /* BNRLine.m */; };
+		A13C7D081C4248A400706C95 /* BNRDrawView.m in Sources */ = {isa = PBXBuildFile; fileRef = A13C7D071C4248A400706C95 /* BNRDrawView.m */; };
+		A13C7D0C1C424A7500706C95 /* BNRDrawViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A13C7D0A1C424A7500706C95 /* BNRDrawViewController.m */; };
+		A13C7D0D1C424A7500706C95 /* BNRDrawViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A13C7D0B1C424A7500706C95 /* BNRDrawViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +30,13 @@
 		A10EFEB01C42456B0047766C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A10EFEB31C42456B0047766C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A10EFEB51C42456B0047766C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A10EFEBB1C4245C30047766C /* BNRLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BNRLine.h; sourceTree = "<group>"; };
+		A10EFEBC1C4245C30047766C /* BNRLine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BNRLine.m; sourceTree = "<group>"; };
+		A13C7D061C4248A400706C95 /* BNRDrawView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BNRDrawView.h; sourceTree = "<group>"; };
+		A13C7D071C4248A400706C95 /* BNRDrawView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BNRDrawView.m; sourceTree = "<group>"; };
+		A13C7D091C424A7500706C95 /* BNRDrawViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BNRDrawViewController.h; sourceTree = "<group>"; };
+		A13C7D0A1C424A7500706C95 /* BNRDrawViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BNRDrawViewController.m; sourceTree = "<group>"; };
+		A13C7D0B1C424A7500706C95 /* BNRDrawViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BNRDrawViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -42,6 +53,13 @@
 		A10EFE981C42456B0047766C = {
 			isa = PBXGroup;
 			children = (
+				A13C7D091C424A7500706C95 /* BNRDrawViewController.h */,
+				A13C7D0A1C424A7500706C95 /* BNRDrawViewController.m */,
+				A13C7D0B1C424A7500706C95 /* BNRDrawViewController.xib */,
+				A13C7D061C4248A400706C95 /* BNRDrawView.h */,
+				A13C7D071C4248A400706C95 /* BNRDrawView.m */,
+				A10EFEBB1C4245C30047766C /* BNRLine.h */,
+				A10EFEBC1C4245C30047766C /* BNRLine.m */,
 				A10EFEA31C42456B0047766C /* TouchTracker */,
 				A10EFEA21C42456B0047766C /* Products */,
 			);
@@ -105,6 +123,7 @@
 		A10EFE991C42456B0047766C /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				CLASSPREFIX = BNR;
 				LastUpgradeCheck = 0720;
 				ORGANIZATIONNAME = ancool;
 				TargetAttributes = {
@@ -138,6 +157,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A10EFEB41C42456B0047766C /* LaunchScreen.storyboard in Resources */,
+				A13C7D0D1C424A7500706C95 /* BNRDrawViewController.xib in Resources */,
 				A10EFEB11C42456B0047766C /* Assets.xcassets in Resources */,
 				A10EFEAF1C42456B0047766C /* Main.storyboard in Resources */,
 			);
@@ -151,7 +171,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				A10EFEAC1C42456B0047766C /* ViewController.m in Sources */,
+				A13C7D0C1C424A7500706C95 /* BNRDrawViewController.m in Sources */,
 				A10EFEA91C42456B0047766C /* AppDelegate.m in Sources */,
+				A10EFEBD1C4245C30047766C /* BNRLine.m in Sources */,
+				A13C7D081C4248A400706C95 /* BNRDrawView.m in Sources */,
 				A10EFEA61C42456B0047766C /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -299,6 +322,7 @@
 				A10EFEBA1C42456B0047766C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
