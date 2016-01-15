@@ -10,11 +10,13 @@
 #import "BNRLine.h"
 
 @interface BNRDrawView ()
+<UIGestureRecognizerDelegate>
 
 //@property (nonatomic, strong) BNRLine *currentLine;
 @property (nonatomic, strong) NSMutableDictionary *linesInProgress;
 @property (nonatomic, strong) NSMutableArray *finnshedLines;
 @property (nonatomic, weak) BNRLine *selectedLine;
+@property (nonatomic, strong) UIPanGestureRecognizer *moveRecognizer;
 
 @end
 
@@ -38,20 +40,92 @@
         //单击
         UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc]
                                                  initWithTarget:self
-                                                 action:@selector(tap:)];
+                                                         action:@selector(tap:)];
         tapRecognizer.delaysTouchesBegan = YES;
         [tapRecognizer requireGestureRecognizerToFail:doubleTapRecognizer];
         [self addGestureRecognizer:tapRecognizer];
-        
+        //长按
+        UILongPressGestureRecognizer *pressRecognizer = [[UILongPressGestureRecognizer alloc]
+                                                         initWithTarget:self
+                                                                 action:@selector(longPress:)];
+        [self addGestureRecognizer:pressRecognizer];
+        //拖动
+        self.moveRecognizer = [[UIPanGestureRecognizer alloc]
+                               initWithTarget:self
+                                       action:@selector(moveLine:)];
+        self.moveRecognizer.delegate = self;
+        self.moveRecognizer.cancelsTouchesInView = NO;
+        [self addGestureRecognizer:self.moveRecognizer];
     }
     return self;
 }
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    if (gestureRecognizer == self.moveRecognizer) {
+        return YES;
+    }
+    return NO;
+}
+
+- (void)moveLine:(UIPanGestureRecognizer *)gr
+{
+    if (!self.selectedLine) {
+        return;
+    }
+    
+    if (gr.state == UIGestureRecognizerStateChanged) {
+        CGPoint translation = [gr translationInView:self];
+        CGPoint begin = self.selectedLine.begin;
+        CGPoint end = self.selectedLine.end;
+        begin.x += translation.x;
+        begin.y += translation.y;
+        end.x += translation.x;
+        end.y += translation.y;
+        
+        self.selectedLine.begin = begin;
+        self.selectedLine.end = end;
+        
+        [self setNeedsDisplay];
+        [gr setTranslation:CGPointZero inView:self];
+    }
+}
+
 
 - (void)tap:(UIGestureRecognizer *)gr
 {
     NSLog(@"Recognized tap");
     CGPoint point = [gr locationInView:self];
     self.selectedLine = [self lineAtPoint:point];
+    
+    if (self.selectedLine) {
+        [self becomeFirstResponder];
+        UIMenuController *menu = [UIMenuController sharedMenuController];
+        UIMenuItem *deletedItem = [[UIMenuItem alloc]
+                                   initWithTitle:@"Delete"
+                                          action:@selector(deleteLine:)];
+        menu.menuItems = @[deletedItem];
+        
+        [menu setTargetRect:CGRectMake(point.x, point.y, 2, 2) inView:self];
+        [menu setMenuVisible:YES animated:YES];
+    } else {
+        [[UIMenuController sharedMenuController] setMenuVisible:NO animated:YES];
+    }
+    
+    [self setNeedsDisplay];
+}
+
+- (void)longPress:(UIGestureRecognizer *)gr
+{
+    if (gr.state == UIGestureRecognizerStateBegan) {
+        CGPoint point = [gr locationInView:self];
+        self.selectedLine = [self lineAtPoint:point];
+        if (self.selectedLine) {
+            [self.linesInProgress removeAllObjects];
+        }
+    } else if (gr.state == UIGestureRecognizerStateEnded){
+        self.selectedLine = nil;
+    }
     [self setNeedsDisplay];
 }
 
@@ -61,7 +135,17 @@
     [self.linesInProgress removeAllObjects];
     [self.finnshedLines removeAllObjects];
     [self setNeedsDisplay];
-    
+}
+
+- (BOOL)canBecomeFirstResponder
+{
+    return YES;
+}
+
+- (void)deleteLine:(id)sender
+{
+    [self.finnshedLines removeObject:self.selectedLine];
+    [self setNeedsDisplay];
 }
 
 - (void)strokeLine:(BNRLine *)line
