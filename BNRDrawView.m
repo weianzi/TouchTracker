@@ -14,6 +14,7 @@
 //@property (nonatomic, strong) BNRLine *currentLine;
 @property (nonatomic, strong) NSMutableDictionary *linesInProgress;
 @property (nonatomic, strong) NSMutableArray *finnshedLines;
+@property (nonatomic, weak) BNRLine *selectedLine;
 
 @end
 
@@ -27,19 +28,67 @@
         self.finnshedLines = [[NSMutableArray alloc] init];
         self.backgroundColor = [UIColor grayColor];
         self.multipleTouchEnabled = YES;
+        //双击
+        UITapGestureRecognizer *doubleTapRecognizer = [[UITapGestureRecognizer alloc]
+                                                       initWithTarget:self
+                                                       action:@selector(doubleTap:)];
+        doubleTapRecognizer.numberOfTapsRequired = 2;
+        doubleTapRecognizer.delaysTouchesBegan = YES;
+        [self addGestureRecognizer:doubleTapRecognizer];
+        //单击
+        UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc]
+                                                 initWithTarget:self
+                                                 action:@selector(tap:)];
+        tapRecognizer.delaysTouchesBegan = YES;
+        [tapRecognizer requireGestureRecognizerToFail:doubleTapRecognizer];
+        [self addGestureRecognizer:tapRecognizer];
+        
     }
     return self;
+}
+
+- (void)tap:(UIGestureRecognizer *)gr
+{
+    NSLog(@"Recognized tap");
+    CGPoint point = [gr locationInView:self];
+    self.selectedLine = [self lineAtPoint:point];
+    [self setNeedsDisplay];
+}
+
+- (void)doubleTap:(UIGestureRecognizer *)gr
+{
+    NSLog(@"Recognizer Double Tap");
+    [self.linesInProgress removeAllObjects];
+    [self.finnshedLines removeAllObjects];
+    [self setNeedsDisplay];
+    
 }
 
 - (void)strokeLine:(BNRLine *)line
 {
     UIBezierPath *bp = [UIBezierPath bezierPath];
-    bp.lineWidth = 10;
+    bp.lineWidth = 8;
     bp.lineCapStyle = kCGLineCapRound;
     
     [bp moveToPoint:line.begin];
     [bp addLineToPoint:line.end];
     [bp stroke];
+}
+
+- (BNRLine *)lineAtPoint:(CGPoint)p
+{
+    for (BNRLine *l in self.finnshedLines) {
+        CGPoint start = l.begin;
+        CGPoint end = l.end;
+        for (float t = 0.0; t <= 1.0; t +=0.05) {
+            float x = start.x + t * (end.x - start.x);
+            float y = start.y + t * (end.y - start.y);
+            if (hypot(x - p.x, y - p.y) < 20.0) {
+                return l;
+            }
+        }
+    }
+    return nil;
 }
 
 - (void)drawRect:(CGRect)rect
@@ -57,6 +106,10 @@
 //        [[UIColor redColor] set];
 //        [self strokeLine:self.currentLine];
 //    }
+    if (self.selectedLine) {
+        [[UIColor greenColor] set];
+        [self strokeLine:self.selectedLine];
+    }
 }
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
